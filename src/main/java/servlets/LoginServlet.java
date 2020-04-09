@@ -9,6 +9,8 @@ package servlets;
  * Web Server responds with Http Response
  */
 
+import service.LoginServiceImpl;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +20,8 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/login.do")
 public class LoginServlet extends HttpServlet {
+
+    LoginServiceImpl loginService = new LoginServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -48,7 +52,7 @@ public class LoginServlet extends HttpServlet {
         String lastName = request.getParameter("last");
         request.setAttribute("lName", lastName);
         String pwd = request.getParameter("password");
-        if (isEmptyFields(firstName, lastName, pwd)) {
+        if (loginService.isEmptyFields(firstName, lastName, pwd)) {
             request.setAttribute("errorMessage", "Please fill all fields !");
             request.getRequestDispatcher("/WEB-INF/views/Login.jsp").forward(request, response);
         } else {
@@ -56,9 +60,4 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    private boolean isEmptyFields(String firstName, String lastName, String pwd) {
-        return (firstName == null || firstName.isEmpty()) &&
-                (lastName == null || lastName.isEmpty()) &&
-                (pwd == null || pwd.isEmpty());
-    }
 }
